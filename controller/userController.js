@@ -12,7 +12,7 @@ module.exports = {
 		});
 	},
 	getSingleUser(req, res) {
-		User.findOne({ id: req.params.userId }, (err, user) => {
+		User.findOne({ _id: req.params.userId }, (err, user) => {
 			if (err) {
 				res.status(500).send({ message: err });
 			} else {
@@ -21,7 +21,7 @@ module.exports = {
 		});
 	},
 	createUser(req, res) {
-		User.create({ username, email }, (err, user) => {
+		User.create(req.body, (err, user) => {
 			if (err) {
 				res.status(500).send({ message: err });
 			} else {
@@ -49,7 +49,7 @@ module.exports = {
 	updateUser(req, res) {
 		User.findOneAndUpdate(
 			{ _id: req.params.userId },
-			{ $set: { username, email } },
+			{ $set: req.body },
 			{ runValidators: true, new: true },
 			(err, user) => {
 				if (err) {
