@@ -2,64 +2,55 @@ const { User, Thought } = require("../models/index");
 
 module.exports = {
 	// get all users
-	getUsers(req, res) {
-		User.find({}, (err, users) => {
-			if (err) {
-				res.status(500).send({ message: err });
-			} else {
-				res.status(200).json(users);
-			}
-		});
+	async getUsers(req, res) {
+		try {
+			const users = await User.find({});
+			res.status(200).json(users);
+		} catch (err) {
+			res.status(500).send({ message: err });
+		}
 	},
-	getSingleUser(req, res) {
-		User.findOne({ _id: req.params.userId }, (err, user) => {
-			if (err) {
-				res.status(500).send({ message: err });
-			} else {
-				res.status(200).json(user);
-			}
-		});
+	async getSingleUser(req, res) {
+		try {
+			const user = await User.findOne({ _id: req.params.userId });
+			res.status(200).json(user);
+		} catch (err) {
+			res.status(500).send({ message: err });
+		}
 	},
-	createUser(req, res) {
-		User.create(req.body, (err, user) => {
-			if (err) {
-				res.status(500).send({ message: err });
-			} else {
-				res.status(200).json(user);
-			}
-		});
+	async createUser(req, res) {
+		try {
+			const user = await User.create(req.body);
+			res.status(201).json(user);
+		} catch (err) {
+			res.status(500).send({ message: err });
+		}
 	},
-	deleteUser(req, res) {
-		User.findOneAndDelete({ _id: req.params.userId }, (err, user) => {
-			if (err) {
-				res.status(500).send({ message: err });
-			} else if (!user) {
-				res.status(404).json({ message: "No user with that id found" });
-			} else {
-				Thought.deleteMany({ _id: { $in: user.thoughts } }, (err, results) => {
-					if (err) {
-						res.status(500).send({ message: err });
-					} else {
-						res.status(200).json({ message: "User and associated thoughts deleted" });
-					}
-				});
+	async deleteUser(req, res) {
+		try {
+			const user = await User.findOneAndDelete({ _id: req.params.userId });
+			if (!user) {
+				return res.status(404).json({ message: "No user with that id found" });
 			}
-		});
+			const thoughts = await Thought.deleteMany({ _id: { $in: user.thoughts } });
+			res.status(200).json({ message: "User and associated thoughts deleted" });
+		} catch (err) {
+			res.status(500).send({ message: err });
+		}
 	},
-	updateUser(req, res) {
-		User.findOneAndUpdate(
-			{ _id: req.params.userId },
-			{ $set: req.body },
-			{ runValidators: true, new: true },
-			(err, user) => {
-				if (err) {
-					res.status(500).send({ message: err });
-				} else if (!user) {
-					res.status(404).json({ message: "No user with that id found" });
-				} else {
-					res.status(200).json(user);
-				}
+	async updateUser(req, res) {
+		try {
+			const user = await User.findOneAndUpdate(
+				{ _id: req.params.userId },
+				{ $set: req.body },
+				{ runValidators: true, new: true }
+			);
+			if (!user) {
+				return res.status(404).json({ message: "No user with that id found" });
 			}
-		);
+			res.status(200).json(user);
+		} catch (err) {
+			res.status(500).send({ message: err });
+		}
 	},
 };
