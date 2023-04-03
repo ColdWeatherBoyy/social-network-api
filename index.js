@@ -10,7 +10,7 @@ const app = express();
 // middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// app.use(routes);
+app.use(routes);
 
 // connection to MongoDB followed by server activation
 db.once("open", () => {
