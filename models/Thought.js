@@ -1,5 +1,6 @@
+// needs for schema
 const { Schema, model } = require("mongoose");
-const Reaction = require("./Reaction");
+const reactionSchema = require("./Reaction");
 
 const thoughtSchema = new Schema(
 	{
@@ -18,6 +19,7 @@ const thoughtSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		// use of reactionSchema
 		reactions: [reactionSchema],
 	},
 	{
@@ -26,11 +28,13 @@ const thoughtSchema = new Schema(
 	}
 );
 
+// both virtual getters for date format
 thoughtSchema.virtual("formatDate").get(function () {
 	this.createdAt = this.createdAt.toLocaleString();
 	return this.createdAt;
 });
 
+// virtual getter for reactionCount
 thoughtSchema.virtual("reactionCount").get(function () {
 	return this.reactions.length;
 });

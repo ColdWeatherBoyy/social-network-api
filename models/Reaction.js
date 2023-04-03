@@ -1,7 +1,9 @@
+// need for reactionSchema definition
 const { Schema, Types } = require("mongoose");
 
 const reactionSchema = new Schema(
 	{
+		// use of ObjectId type
 		reactionId: {
 			type: Schema.Types.ObjectId,
 			default: () => new Types.ObjectId(),
@@ -26,6 +28,7 @@ const reactionSchema = new Schema(
 	}
 );
 
+// virtual for date formatting
 reactionSchema.virtual("formatDate").get(function () {
 	this.createdAt = this.createdAt.toLocaleString();
 	return this.createdAt;
