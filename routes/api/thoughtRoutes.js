@@ -17,3 +17,5 @@ router
 	.get(getSingleThought)
 	.delete(deleteThought)
 	.put(updateThought);
+
+module.exports = router;

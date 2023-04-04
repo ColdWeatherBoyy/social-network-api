@@ -12,7 +12,9 @@ module.exports = {
 	},
 	async getSingleUser(req, res) {
 		try {
-			const user = await User.findOne({ _id: req.params.userId }).populate("friends");
+			const user = await User.findOne({ _id: req.params.userId })
+				.populate("friends")
+				.populate("thoughts");
 			res.status(200).json(user);
 		} catch (err) {
 			res.status(500).send({ message: err });
