@@ -52,6 +52,7 @@ module.exports = {
 		try {
 			const thought = await Thought.findOneAndUpdate(
 				{ _id: req.params.thoughtId },
+				// creates from req.body
 				{ $set: req.body },
 				{ runValidators: true, new: true }
 			);
@@ -74,9 +75,10 @@ module.exports = {
 				return res.status(404).json({ message: "No thought with that ID found" });
 			}
 
+			// removes id from User that contained it once deleted
 			const user = await User.findOneAndUpdate(
 				{ thoughts: req.params.thoughtId },
-				{ pull: { thoughts: req.params.thoughtId } },
+				{ $pull: { thoughts: req.params.thoughtId } },
 				{ runValidators: true, new: true }
 			);
 
@@ -90,10 +92,13 @@ module.exports = {
 			res.status(500).send({ message: err });
 		}
 	},
+	// create a reaction for reactionScehma in Thought Document reaction arrays
 	async createReaction(req, res) {
 		try {
+			// finds thought that will contain reaction
 			const thought = await Thought.findOneAndUpdate(
 				{ _id: req.params.thoughtId },
+				// adds to array
 				{ $addToSet: { reactions: req.body } },
 				{ runValidators: true, new: true }
 			);
@@ -107,10 +112,12 @@ module.exports = {
 			res.status(500).send({ message: err });
 		}
 	},
+	// delete of reaction subdoc within thought
 	async deleteReaction(req, res) {
 		try {
 			const thought = await Thought.findOneAndUpdate(
 				{ _id: req.params.thoughtId },
+				// pulls from reaction array
 				{ $pull: { reactions: { reactionId: req.params.reactionId } } },
 				{ runValidators: true, new: true }
 			);

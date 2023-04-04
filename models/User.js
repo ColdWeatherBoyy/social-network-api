@@ -1,6 +1,7 @@
 // Mongoose needs
 const { Schema, model } = require("mongoose");
 
+// defines user schema
 const userSchema = new Schema(
 	{
 		username: {
@@ -14,7 +15,7 @@ const userSchema = new Schema(
 			lowercase: true,
 			unique: true,
 			required: true,
-			// match validator with email regex
+			// match validator with email regex for lowercase, hence lowercase constraint above
 			match: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
 		},
 		// references, including self reference
@@ -31,7 +32,7 @@ const userSchema = new Schema(
 			},
 		],
 	},
-	// needed for virtuals conversion
+	// needed for virtuals
 	{
 		toJSON: { getters: true },
 		id: false,
