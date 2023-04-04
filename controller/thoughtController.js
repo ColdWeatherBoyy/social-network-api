@@ -38,7 +38,11 @@ module.exports = {
 					.send({ message: "User not found, but application created" });
 			}
 
-			res.status(202).json(`${thought} created and added to ${user}`);
+			res
+				.status(202)
+				.json(
+					`"${thought.thoughtText}" is created and added to ${user.username}'s thoughts`
+				);
 		} catch (err) {
 			res.status(500).send({ message: err });
 		}
@@ -46,7 +50,7 @@ module.exports = {
 	// update a thought by id
 	async updateThought(req, res) {
 		try {
-			const thought = await Thought.findOne(
+			const thought = await Thought.findOneAndUpdate(
 				{ _id: req.params.thoughtId },
 				{ $set: req.body },
 				{ runValidators: true, new: true }
@@ -55,6 +59,8 @@ module.exports = {
 			if (!thought) {
 				return res.status(404).json({ message: "No thought with that ID found" });
 			}
+
+			res.status(200).json({ message: thought });
 		} catch (err) {
 			res.status(500).send({ message: err });
 		}

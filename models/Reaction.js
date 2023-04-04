@@ -30,8 +30,8 @@ const reactionSchema = new Schema(
 
 // virtual for date formatting
 reactionSchema.virtual("formatDate").get(function () {
-	this.createdAt = this.createdAt.toLocaleString();
-	return this.createdAt;
+	const date = new Date(this.createdAt);
+	return date.toLocaleString();
 });
 
 module.exports = reactionSchema;

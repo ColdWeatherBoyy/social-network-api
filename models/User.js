@@ -11,6 +11,7 @@ const userSchema = new Schema(
 		},
 		email: {
 			type: String,
+			lowercase: true,
 			unique: true,
 			required: true,
 			// match validator with email regex

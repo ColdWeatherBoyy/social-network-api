@@ -29,8 +29,8 @@ const thoughtSchema = new Schema(
 
 // both virtual getters for date format
 thoughtSchema.virtual("formatDate").get(function () {
-	this.createdAt = this.createdAt.toLocaleString();
-	return this.createdAt;
+	const date = new Date(this.createdAt);
+	return date.toLocaleString();
 });
 
 // virtual getter for reactionCount
